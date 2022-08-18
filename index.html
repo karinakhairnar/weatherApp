@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" 
+    href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" 
+    integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm" 
+    crossorigin="anonymous">
+    <!-- <link rel="stylesheet" href="https://fontawesome.com/v4/icons/"> -->
+    <style>
+         body{
+            margin: auto;
+            width: 80%;
+            box-shadow: rgba(211, 91, 91, 0.24) 0px 3px 8px;
+         }
+         #nav{
+             background-color: rgb(138, 163, 155);
+             width: 80%;
+             margin: 20px auto;
+             /* height: 50px; */
+         }
+         #nav>input{
+           margin: 14px 80px;
+           height: 20px;
+           width: 50%;
+         }
+         #maincontainer{
+             display: flex;
+             margin: auto;
+            width: 80%;
+            height: 600px;
+            /* border: 2px solid black; */
+            background-color: rgb(241, 243, 234);
+         }
+         #container{
+            margin: auto;
+            width: 80%;
+            /* border: 2px solid black; */
+            color: rgb(102, 1, 1);
+            text-align: center;
+         }
+         #map{
+            margin: auto;
+            width: 80%;
+            /* border: 2px solid black; */
+         }
+    </style>
+    
+</head>
+<body>
+    <div id="nav">
+        <input type="text" placeholder="Enter Your City Name" id="city"/>
+        <button onclick="getWeather()">Get Weather</button> 
+    </div>
+<div id="maincontainer">
+    <div id="container">
+        <!-- <i class="fa-solid fa-temperature-full"></i> -->
+    </div>
+    <div id="map">
+        <!-- <div class="mapouter"><div class="gmap_canvas"><iframe width="600" height="500" id="gmap_canvas" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe><a href="https://123movies-to.org">123 movies</a><br><style>.mapouter{position:relative;text-align:right;height:500px;width:600px;}</style><a href="https://www.embedgooglemap.net">google map link for website</a><style>.gmap_canvas {overflow:hidden;background:none!important;height:500px;width:600px;}</style></div></div> -->
+    </div>
+</div>
+</body>
+</html>
+<script>
+
+        let container = document.getElementById("container");
+        let map = document.getElementById("map");
+    async function getWeather(){
+        // <iframe width="600" height="450" style="border:0" loading="lazy"></iframe>
+        try{
+                let city = document.getElementById("city").value;
+
+                //let res = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=21627f41065485af29151d02f0403602&units=metric`);
+                // for one day
+                 let res = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=e4c70ce6a6821649a416cb9521d5f4f8&units=metric`)
+                //for 7 days
+                //let res = await fetch(`https://api.openweathermap.org/data/2.5/forecast/daily?q=${city}&appid=e4c70ce6a6821649a416cb9521d5f4f8&units=metric`)
+                // API key = api.openweathermap.org/data/2.5/weather?q={city name}&appid={21627f41065485af29151d02f0403602}
+               // let res = await fetch( `https://api.openweathermap.org/data/2.5/forecast/daily?q=${city}&cnt=3&appid=e4c70ce6a6821649a416cb9521d5f4f8&units=metric`)
+
+                let data = await res.json()
+                appendData(data);
+                console.log("data:",data)        
+        }catch(error){
+            console.log("err:",error);
+        }
+       
+    }
+
+   
+    function appendData(data){
+         container.innerHTML= null; 
+         map.innerHTML= null;
+         let name = document.createElement("h1");
+         name.innerText = `City:- ${data.name}`;
+         let temp = document.createElement("h3");
+         temp.innerText = `Temperature:- ${data.main.temp}`;
+         let min = document.createElement("h3");
+         min.innerText = `Min-Temperature:- ${data.main.temp_min}`;
+         let max = document.createElement("h3");
+         max.innerText = `Max-Temperature:- ${data.main.temp_max} `;
+         let sunrise = document.createElement("h3");
+         sunrise.innerText = `Sunrise:- ${data.sys.sunrise}`;
+         let sunset = document.createElement("h3");
+         sunset.innerText = ` Sunset:- ${data.sys.sunset}`;
+        let wind = document.createElement("h3");
+         wind.innerText = ` Wind:- ${data.wind.speed}`;
+        // wind, clounds, sunrise, sunset
+
+         let iframe = document.createElement("iframe")
+         iframe.src = `https://maps.google.com/maps?q=${data.name}&t=&z=13&ie=UTF8&iwloc=&output=embed`
+         iframe.height = `500px`
+         iframe.width = `500px`
+        container.append(name,temp,min,max,wind, sunrise, sunset);
+        map.append(iframe);
+    }
+</script>
